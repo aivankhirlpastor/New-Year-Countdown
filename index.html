@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Year Countdown</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght,XTRA,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,80,100..1000,470,760,-236,660,500,675&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="toolbar">
+        <div>
+            <div class="main">
+                <input aria-label="Main Color" id="main" value="#ffffff" type="color">
+            </div>
+            <div class="color-pallete">
+                <input aria-label="Primary Color" id="primary" type="color">
+                <input aria-label="Secondary Color" id="secondary" type="color">
+                <input aria-label="Tertiary Color" id="tertiary" type="color">
+                <input aria-label="Quaternary Color" id="quaternary" type="color">
+            </div>
+            <div class="buttons">
+                <button type="button" id="gfx-settings">Graphics</button>
+                <button type="button" id="reset-default">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu">
+        <h2 title="Click here to close the panel menu.">GRAPHICS</h2>
+        <div id="block-wall"></div>
+        <div>
+            <label for="text-glow">Text Glow</label>
+            <input id="text-glow" type="checkbox" value="Text Glow">
+        </div>
+        <div>
+            <label for="box-glow">Box Glow</label>
+            <input id="box-glow" type="checkbox" value="Box Glow">
+        </div>
+        <!-- <div>
+            <label for="rising-animation">Rising Animation</label>
+            <input id="rising-animation" type="checkbox" value="Rising Animation">
+        </div> -->
+        <div>
+            <label for="glass-effect">Glass Effect</label>
+            <input id="glass-effect" type="checkbox" value="Glass Effect">
+        </div>
+    </div>
+
+    <div id="pop-up">
+        <section>
+            <h2>RESET STYLE TO DEFAULT?</h2>
+            <p>The standard style of the elements will be returned by this operation.</p>
+        </section>
+        <div>
+            <button type="button" id="on-operation">OK</button>
+            <button type="button" id="close-cancel">Cancel</button>
+        </div>
+
+    </div>
+
+    <div id="backdrop">
+
+
+        <div id="container">
+
+            <span id="date">Time Zone</span>
+
+            <div class="countdown-base">
+                <p id="matrix-label">TEXT</p>
+                <div id="bases">
+                    <div id="separator">   .  .</div>
+                    <div class="unit-base" id="b-1">!!2!</div>
+                    <div class="unit-base" id="b-2">10!</div>
+                    <div class="unit-base" id="b-3">48!</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

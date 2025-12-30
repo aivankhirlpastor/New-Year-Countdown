@@ -39,7 +39,6 @@
     --gray-2: #222222;
     --gray-3: #444444;
     --gray-4: #575757;
-    /* --gray-5: #878787; */
 
     :has(#menu.active) {
         --btn-checked: #ffffff63;
@@ -47,15 +46,35 @@
 }
 
 body {
+    align-items: center;
     background-color: black;
     display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 0;
+    width: 100vw;
     height: 100vh;
-
+    justify-content: center;
+    margin: 0;
     overflow-y: hidden;
+    position: relative;
+    
+    &[data-glass-effect="true"] {
+        
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url(./background/home-screen-gradient1.png);
+            
+            background-position: center;
+            background-size: cover;
+            opacity: 0.8;
+        }
+
+        --gef: blur(20px) saturate(180%) contrast(60%);
+        --gef-container: blur(20px) saturate(220%) contrast(100%);
+    }
 }
 
 button {
@@ -92,14 +111,18 @@ button {
     right: var(--size);
 
     font-size: 1.05rem;
+
     
     div {
         background-color: var(--gray-3);
         border-radius: 0.5em;
         display: inherit;
         padding: 0.2em calc(var(--size) / 3);
-
+        -webkit-backdrop-filter: var(--gef, none);
+        backdrop-filter: var(--gef, none);
+        
         > div {
+            background-color: transparent;
             display: inherit;
             align-content: center;
             flex-wrap: wrap;
@@ -113,7 +136,20 @@ button {
             }
 
             button {
-                background-color: var(--btn-checked);
+                align-items: center;
+                display: flex;
+                gap: 1em;
+
+                &#gfx-settings {
+                    background-color: var(--btn-checked);
+                }
+
+                img {
+                    width: 1.2em;
+                    height: 1.2em;
+                    filter: invert(1);
+                }
+
             }
 
             & input[type=color] {
@@ -148,10 +184,8 @@ button {
             }
         }
     }
-
-    
-
 }
+
 
 #menu {
     background-color: var(--gray-3);
@@ -435,6 +469,19 @@ button {
     }
 }
 
+[data-glass-effect="true"] {
+    .toolbar div {
+        background-color: transparent;
+    }
+
+    #container {
+        background-color: transparent;
+        border-color: #ffffff16;
+        -webkit-backdrop-filter: var(--gef-container);
+        backdrop-filter: var(--gef-container);
+    }
+}
+
 @keyframes glow {
     from {
         text-shadow: 0 0 32px #bababa9f, 0 0 16px #ffffff37, 0 0 8px #ffffff56, 0 0 4px #ffffff30;
@@ -457,6 +504,12 @@ button {
 
 @media (display-mode: fullscreen) {
     .toolbar {
+        display: none;
+    }
+}
+
+@media (orientation: portrait) {
+    .toolbar button > span {
         display: none;
     }
 }

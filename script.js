@@ -32,14 +32,11 @@ const dv = {
     gfx: {
         textGlow: true,
         boxGlow: true,
-        risingAnimation: true,
-        glassEffect: false,
+        glassEffect: false
     }
 };
 
 var user = 0;
-
-
 var system = {
     time: {
         c: 0,
@@ -52,6 +49,10 @@ var system = {
         // to: new Date(2025, 11, 31, 23, 59, 45, 0),
     }
 };
+
+const resetStyle = () => {
+    localStorage.removeItem("styling");
+}
 
 const textGlow = () => {
     if (document.getElementById("text-glow").checked) {
@@ -73,31 +74,38 @@ const boxGlow = () => {
     };
 };
 
+const glassEffect = () => {
+    if (document.getElementById("glass-effect").checked) {
+        document.querySelector("body").setAttribute("data-glass-effect", "true");
+        user.gfx.glassEffect = true;
+    } else {
+        document.querySelector("body").setAttribute("data-glass-effect", "false");
+        user.gfx.glassEffect = false;
+    };
+};
+
 function loadData() {
-    function elementWheel() {
-        maincolor.value = user.color.main;
-        primarycolor.value = user.color.primary;
-        secondarycolor.value = user.color.secondary;
-        tertiarycolor.value = user.color.tertiary;
-        quaternarycolor.value = user.color.quaternary;
-    }
-
-    let initialValue = dv;
+    // let initialValue = dv;
+    user = 0;
     let loadfile = localStorage.getItem('styling');
-
+    
     if (loadfile) {
         console.log("styling data loaded");
         user = JSON.parse(loadfile);
     } else {
-        user = initialValue;
-        localStorage.setItem("styling", JSON.stringify(initialValue));
+        user = dv;
+        localStorage.setItem('styling', JSON.stringify(dv));
     }
-
-    elementWheel();
 }
 
 
 function loadStyle() {
+    maincolor.value = user.color.main;
+    primarycolor.value = user.color.primary;
+    secondarycolor.value = user.color.secondary;
+    tertiarycolor.value = user.color.tertiary;
+    quaternarycolor.value = user.color.quaternary;
+
     if (user.gfx.textGlow) {
         document.getElementById("text-glow").setAttribute("checked", "");
     } else {
@@ -110,8 +118,15 @@ function loadStyle() {
         document.getElementById("box-glow").removeAttribute("checked");
     };
 
+    if (user.gfx.glassEffect) {
+        document.getElementById("glass-effect").setAttribute("checked", "");
+    } else {
+        document.getElementById("glass-effect").removeAttribute("checked");
+    };
+
     textGlow();
     boxGlow();
+    glassEffect();
 }
 
 function renderCountdown(y, mo, dy, se, ms) {
@@ -363,6 +378,11 @@ document.getElementById("box-glow").addEventListener("change", () => {
     localStorage.setItem('styling', JSON.stringify(user));
 });
 
+document.getElementById("glass-effect").addEventListener("change", () => {
+    glassEffect();
+    localStorage.setItem('styling', JSON.stringify(user));
+});
+
 document.getElementById("menu").addEventListener("click", e => {
     if (document.getElementById("block-wall").contains(e.target) || document.querySelector("div#menu h2").contains(e.target)) {
         menu.classList.remove("active");
@@ -389,8 +409,8 @@ closeCancelBtn.addEventListener("click", () => {
 });
 
 proceedBtn.addEventListener("click", () => {
-    localStorage.removeItem("styling");
-    loadData(); // reload style
+    localStorage.removeItem('styling');
+    window.location.reload();
 
     document.getElementById("pop-up").classList.remove("show");
 

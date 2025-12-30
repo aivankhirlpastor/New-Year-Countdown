@@ -46,7 +46,7 @@ var system = {
             initials: false,
             newyear: false,
         },
-        to: new Date(2025, 11, 31, 23, 57, 0, 0),
+        // to: new Date(2025, 11, 31, 23, 57, 0, 0),
     }
 };
 

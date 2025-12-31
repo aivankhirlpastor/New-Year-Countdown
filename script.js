@@ -52,7 +52,7 @@ var system = {
             initials: false,
             newyear: false,
         },
-        to: new Date(2025, 11, 31, 23, 57, 0, 0),
+        to: new Date(2025, 11, 31, 23, 57, 48, 0),
     }
 };
 
@@ -197,10 +197,34 @@ function renderCountdown(y, mo, dy, h, m, se, ms) {
     let sC = user.color.quaternary;
 
     cc.style.setProperty("--main-color", user.color.main);
-
     let cSepV = parseInt(preCD) >= 1 && se % 2 === 0 || parseInt(preCD) < 1 && ms < 500 ? "." : " ";
-    let glowbaseProperty = ms < 500 ? `0 0 38em ${sC}aa, 0 0 18em ${sC}aa, 0 0 6.6em ${sC}89, 0 0 4em ${sC}80, 0 0 3em #9c9c9ccc, 0 0 20px #9c9c9ccc, 0 0 15px #84848484, 0 0 10px ${sC}84, 0 0 4px #6b6b6b66` : "none"
-    let glowbox = ms < 500 ? `0 0 3em #ffffff80, inset 0 0 15em #9c9c9c20, 0 0 20px #9c9c9ccc, inset 0 0 15px #84848484, inset 0 0 10px #ffffff84, 0 0 4px #6b6b6b66` : "none"
+    let glowbaseProperty = ms < 500 ? `0 0 38em ${sC}aa, 0 0 18em ${sC}aa, 0 0 ${se / 10}em ${sC}99, 0 0 4em ${sC}88, 0 0 3em #9c9c9ccc, 0 0 20px #9c9c9ccc, 0 0 ${se / 3}px #84848484, 0 0 ${se / 3}px ${sC}ff, 0 0 4px #6b6b6b66` : "none"
+    let glowbox = ms < 500 ? `0 0 3em #ffffff80, inset 0 0 15em #9c9c9c20, 0 0 20px #9c9c9ccc, inset 0 0 ${se / 5}px #84848484, inset 0 0 10px #ffffff84, 0 0 4px #6b6b6b66` : "none"
+
+    function glowFlash(mv, sv) {
+        let tertiaryGlow = `0 0 50px #87878787, 0 0 ${(11 - mv) * 3}px ${user.color.tertiary}`;
+        let quaternaryGlow = `0 0 50px #87878787, 0 0 20px #87878787, 0 0 ${(11 - mv) * 3}px ${sC}`;
+        let tickcountGlow = `0 0 ${se / 10}em ${sC}, 0 0 ${se / 3}px #848484, 0 0 ${se / 3}px ${sC}a0`;
+                
+        if (parseInt(preCD) === 0 && parseInt(preCH) === 0) {
+            if (mv === 10 || mv === 5 || mv === 3 || mv === 2 || mv === 1) {
+                if (sv === 0) {
+                    base2.style.setProperty("--tertiary-blink", ms < 500 ? tertiaryGlow : "none");
+                    base3.style.setProperty("--quaternary-blink", ms < 500 ? quaternaryGlow : "none");
+                }
+            } else if (mv === 0) {
+                if (sv <= 10) {
+                    base3.style.setProperty("--quaternary-blink", glowbaseProperty);
+                    cc.style.setProperty("--boxglow", glowbox);
+                } else {
+                    base3.style.setProperty("--quaternary-blink", ms < 500 ? tickcountGlow : "none");
+                }
+            } else {
+                base2.style.setProperty("--tertiary-blink", "none");
+                base3.style.setProperty("--quaternary-blink", "none");
+            }
+        }
+    }
 
     if (mo === 0 & dy === 1) {
         label.textContent = spaceConversion("         ");
@@ -334,12 +358,9 @@ function renderCountdown(y, mo, dy, h, m, se, ms) {
         base3.style.color = user.color.quaternary;
 
         document.querySelector("body").classList.add("rise");
-
-        if (parseInt(preCS) <= 10) {
-            base3.style.setProperty("--blink", glowbaseProperty);
-            cc.style.setProperty("--boxglow", glowbox);
-        }
     }
+
+    glowFlash(parseInt(preCM), parseInt(preCS));
 }
 
 function getTime() {

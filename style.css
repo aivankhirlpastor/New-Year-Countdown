@@ -503,8 +503,15 @@ footer {
                 animation: none;
             }
 
+            #b-2 {
+                /* text-shadow: 0 0 21px #008dca; */
+
+                text-shadow: var(--tertiary-blink);
+                transition: text-shadow 0.20s ease;
+            }
+
             #b-3 {
-                text-shadow: var(--blink, none);
+                text-shadow: var(--quaternary-blink, none);
                 transition: text-shadow 0.20s ease;
             }
         }

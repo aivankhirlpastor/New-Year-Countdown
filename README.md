@@ -22,5 +22,5 @@ The countdown structure has a simple glow animation (demands GPU process) when i
 
 ### Trying Demo
 
-If you missed an simple and exciting part of a glow animation before the new year has passed, you can still [try the demo page by clicking here](https://aivankhirlpastor.github.io/New-Year-Countdown/index.html). Via demo page, the countdown will adjust to a 3-minute tick.
+If you missed an simple and exciting part of a glow animation before the new year has passed, you can still [try the demo page here](https://aivankhirlpastor.github.io/New-Year-Countdown/demo.html). Via demo page, the countdown will adjust to a 3-minute tick.
 

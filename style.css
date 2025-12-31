@@ -75,6 +75,7 @@ body {
         &.rise::before {
             opacity: 0.05;
             transition: opacity 60s linear;
+            transition-delay: 120s;
         }
 
         --gef: blur(20px) saturate(180%) contrast(60%);

@@ -207,7 +207,7 @@ function renderCountdown(y, mo, dy, h, m, se, ms) {
         let tickcountGlow = `0 0 ${se / 10}em ${sC}, 0 0 ${se / 3}px #848484, 0 0 ${se / 3}px ${sC}a0`;
                 
         if (parseInt(preCD) === 0 && parseInt(preCH) === 0) {
-            if (mv === 10 || mv === 5 || mv === 3 || mv === 2 || mv === 1) {
+            if (mv === 10 && sv === 0 || mv === 5 && sv === 0 || mv === 3 && sv === 0 || mv === 2 && sv === 0 || mv === 1 && sv === 0) {
                 if (sv === 0) {
                     base2.style.setProperty("--tertiary-blink", ms < 500 ? tertiaryGlow : "none");
                     base3.style.setProperty("--quaternary-blink", ms < 500 ? quaternaryGlow : "none");
@@ -219,11 +219,17 @@ function renderCountdown(y, mo, dy, h, m, se, ms) {
                 } else {
                     base3.style.setProperty("--quaternary-blink", ms < 500 ? tickcountGlow : "none");
                 }
+
             } else {
                 base2.style.setProperty("--tertiary-blink", "none");
                 base3.style.setProperty("--quaternary-blink", "none");
             }
+
+            if (!document.querySelector("body.rise") && mv === 2) {
+                document.querySelector("body").classList.add("rise");   
+            }
         }
+        
     }
 
     if (mo === 0 & dy === 1) {
@@ -357,7 +363,6 @@ function renderCountdown(y, mo, dy, h, m, se, ms) {
         base3.textContent = String(sec + s).padEnd(6, s);
         base3.style.color = user.color.quaternary;
 
-        document.querySelector("body").classList.add("rise");
     }
 
     glowFlash(parseInt(preCM), parseInt(preCS));

@@ -35,6 +35,11 @@
                     <span>Reset to Default</span>
                 </button>
             </div>
+            <div>
+                <button title="Fullscreen Mode" type="button" id="fullscreen">
+                    <img alt="Two arrows at diagonal in opposing direction" src="./icons/fullscreen.svg">
+                </button>
+            </div>
         </div>
     </div>
 
@@ -61,19 +66,14 @@
             <p>The standard style of the elements will be returned by this operation.</p>
         </section>
         <div>
-            <button type="button" id="on-operation">OK</button>
-            <button type="button" id="close-cancel">Cancel</button>
+            <button type="button" id="on-operation">Yes</button>
+            <button type="button" id="close-cancel">No</button>
         </div>
-
     </div>
 
     <div id="backdrop">
-
-
         <div id="container">
-
             <span id="date">Time Zone</span>
-
             <div class="countdown-base">
                 <p id="matrix-label">TEXT</p>
                 <div id="bases">
@@ -83,9 +83,21 @@
                     <div class="unit-base" id="b-3">48!</div>
                 </div>
             </div>
-
         </div>
     </div>
+
+    <span class="fullscreen-tip">Press ESC on your keyboard or double click/tap anywhere on your screen.</span>
+
+    <footer>
+        <div>
+            <span id="html-title">
+                New-Year-Countdown
+                <a href="./demo.html">demo</a>
+            </span>
+            <a href="https://github.com/aivankhirlpastor/New-Year-Countdown" target="_blank">GitHub Page</a>
+        </div>
+
+    </footer>
 
     <script src="script.js"></script>
 </body>

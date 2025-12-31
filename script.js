@@ -2,9 +2,11 @@
 
 let s = "!"
 
+const root = document.documentElement;
 const cc = document.getElementById("container");
 const ct = document.querySelector("div.countdown-base");
 const menu = document.getElementById("menu");
+const rootdemo = document.getElementById("demo")
 
 let maincolor = document.getElementById("main");
 let primarycolor = document.getElementById("primary");
@@ -16,6 +18,7 @@ let quaternarycolor = document.getElementById("quaternary");
 
 let gfxBtn = document.getElementById("gfx-settings");
 let resetBtn = document.getElementById("reset-default");
+let fullscreen = document.getElementById("fullscreen");
 let closeCancelBtn = document.getElementById("close-cancel");
 let proceedBtn = document.getElementById("on-operation");
 
@@ -38,6 +41,9 @@ const dv = {
 
 var user = 0;
 var system = {
+    screen: {
+        fullscreen: false
+    },
     time: {
         c: 0,
         entry: new Date(),
@@ -46,7 +52,7 @@ var system = {
             initials: false,
             newyear: false,
         },
-        // to: new Date(2025, 11, 31, 23, 59, 45, 0),
+        to: new Date(2025, 11, 31, 23, 57, 0, 0),
     }
 };
 
@@ -100,11 +106,13 @@ function loadData() {
 
 
 function loadStyle() {
-    maincolor.value = user.color.main;
-    primarycolor.value = user.color.primary;
-    secondarycolor.value = user.color.secondary;
-    tertiarycolor.value = user.color.tertiary;
-    quaternarycolor.value = user.color.quaternary;
+    if (!rootdemo) {
+        maincolor.value = user.color.main;
+        primarycolor.value = user.color.primary;
+        secondarycolor.value = user.color.secondary;
+        tertiarycolor.value = user.color.tertiary;
+        quaternarycolor.value = user.color.quaternary;
+    }
 
     if (user.gfx.textGlow) {
         document.getElementById("text-glow").setAttribute("checked", "");
@@ -129,7 +137,7 @@ function loadStyle() {
     glassEffect();
 }
 
-function renderCountdown(y, mo, dy, se, ms) {
+function renderCountdown(y, mo, dy, h, m, se, ms) {
     const nextYear = new Date(y + 1, 0, 1, 0, 0, 1, 0);
 
     let d = nextYear - system.time.c;
@@ -203,35 +211,46 @@ function renderCountdown(y, mo, dy, se, ms) {
         base2.textContent = s;
         base3.textContent = s;
 
+        document.querySelector("body").classList.remove("rise");
+
         if (!system.time.passes.newyear) {
-            system.time.passes.newyear = true
-
-
             const b = document.getElementById("bases");
+            system.time.passes.newyear = true;
 
-            cc.classList.add("visualglow", "flash");
-            cc.style.setProperty("--box-trans", "box-shadow 10s ease");
-
-            b.classList.add("flash");
-            b.style.setProperty("--trans", "text-shadow 10s ease");
-
-
-            setTimeout(() => {
-                cc.classList.remove("flash");
-                cc.style.setProperty("--boxglow", "0 0 3em #ffffff80, inset 0 0 15em #9c9c9c20, 0 0 20px #9c9c9ccc, inset 0 0 15px #84848484, inset 0 0 10px #ffffff84, 0 0 4px #6b6b6b66");
-
-                b.classList.remove("flash");
-                b.style.setProperty("--text-glow", "0 0 32px #bababa9f, 0 0 16px #ffffff37, 0 0 8px #ffffff56, 0 0 4px #ffffff30");
-
+            if (h === 0 & m === 0 & se === 0) {
+                cc.classList.add("visualglow", "flash");
+                cc.style.setProperty("--box-trans", "box-shadow 10s ease");
+    
+                b.classList.add("flash");
+                b.style.setProperty("--trans", "text-shadow 10s ease");
+    
+    
                 setTimeout(() => {
-                    cc.style.setProperty("--box-glow", "boxglow 5s ease infinite alternate")
-                    cc.style.setProperty("--box-trans", "none")
+                    cc.classList.remove("flash");
+                    cc.style.setProperty("--boxglow", "0 0 3em #ffffff80, inset 0 0 15em #9c9c9c20, 0 0 20px #9c9c9ccc, inset 0 0 15px #84848484, inset 0 0 10px #ffffff84, 0 0 4px #6b6b6b66");
+    
+                    b.classList.remove("flash");
+                    b.style.setProperty("--text-glow", "0 0 32px #bababa9f, 0 0 16px #ffffff37, 0 0 8px #ffffff56, 0 0 4px #ffffff30");
+    
+                    setTimeout(() => {
+                        cc.style.setProperty("--box-glow", "boxglow 5s ease infinite alternate")
+                        cc.style.setProperty("--box-trans", "none")
+    
+                        b.style.setProperty("--glow", "glow 5s ease infinite alternate");
+                        b.style.setProperty("--trans", "none");
+                    }, 10000);
+                }, 500);
+            } else {
+                cc.classList.add("visualglow");
 
-                    b.style.setProperty("--glow", "glow 5s ease infinite alternate");
-                    b.style.setProperty("--trans", "none");
-                }, 10000);
+                cc.style.setProperty("--boxglow", "0 0 3em #ffffff80, inset 0 0 15em #9c9c9c20, 0 0 20px #9c9c9ccc, inset 0 0 15px #84848484, inset 0 0 10px #ffffff84, 0 0 4px #6b6b6b66");
+                cc.style.setProperty("--box-glow", "boxglow 5s ease infinite alternate")
+                // cc.style.setProperty("--box-trans", "none")
 
-            }, 500);
+                b.style.setProperty("--text-glow", "0 0 32px #bababa9f, 0 0 16px #ffffff37, 0 0 8px #ffffff56, 0 0 4px #ffffff30");
+                b.style.setProperty("--glow", "glow 5s ease infinite alternate");
+                // b.style.setProperty("--trans", "none");
+            }
         }
 
         return;
@@ -302,6 +321,7 @@ function renderCountdown(y, mo, dy, se, ms) {
 
         base3.textContent = String(sec + s).padEnd(5, s);
         base3.style.color = user.color.quaternary;
+
     } else if (parseInt(preCD) === 0 && parseInt(preCH) === 0 && parseInt(preCM) === 0) {
         // if there are less than 60 SECONDS left
 
@@ -312,6 +332,8 @@ function renderCountdown(y, mo, dy, se, ms) {
         base2.textContent = s;
         base3.textContent = String(sec + s).padEnd(6, s);
         base3.style.color = user.color.quaternary;
+
+        document.querySelector("body").classList.add("rise");
 
         if (parseInt(preCS) <= 10) {
             base3.style.setProperty("--blink", glowbaseProperty);
@@ -327,7 +349,7 @@ function getTime() {
     system.time.original = new Date();
     let t = system.time.c;
 
-    if (system.time.to) {
+    if (rootdemo && system.time.to) {
         const dif = system.time.to - (system.time.entry - new Date());
         t = new Date(dif);
         system.time.c = dif;
@@ -346,13 +368,13 @@ function getTime() {
         seconds = t.getSeconds(),
         milliseconds = t.getMilliseconds();
 
-    renderCountdown(years, month, days, seconds, milliseconds);
+    renderCountdown(years, month, days, hours, minutes, seconds, milliseconds);
 
     let time = new Intl.DateTimeFormat("en-US", {
         timeStyle: "long",
     }).format(t);
 
-    document.getElementById("date").textContent = new Intl.DateTimeFormat("en-NZ", {
+    document.getElementById("date").textContent = new Intl.DateTimeFormat(locale, {
         timeZoneName: "long",
         day: "numeric",
         month: "short",
@@ -361,10 +383,6 @@ function getTime() {
 
     cc.style.setProperty("--time", `"${time}"`);
 }
-
-setInterval(getTime, 0.4);
-
-loadData();
 
 // listeners
 
@@ -404,6 +422,26 @@ resetBtn.addEventListener("click", () => {
     document.getElementById("pop-up").classList.add("show");
 });
 
+fullscreen.addEventListener("click", () => {
+    if (root.requestFullscreen) {
+        root.requestFullscreen();
+    } else if (root.webkitRequestFullscreen) {
+        root.webkitRequestFullscreen();
+    } else if (root.msRequestFullscreen) {
+        root.msRequestFullscreen();
+    };
+})
+
+root.addEventListener("dblclick", () => {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+})
+
 closeCancelBtn.addEventListener("click", () => {
     document.getElementById("pop-up").classList.remove("show");
 });
@@ -416,33 +454,33 @@ proceedBtn.addEventListener("click", () => {
 
 });
 
-maincolor.addEventListener("input", () => {
-    user.color.main = `${maincolor.value}`;
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+if (!rootdemo) {
+    maincolor.addEventListener("input", () => {
+        user.color.main = `${maincolor.value}`;
+        localStorage.setItem('styling', JSON.stringify(user));
+    });
 
-primarycolor.addEventListener("input", () => {
-    user.color.primary = `${primarycolor.value}`;
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+    primarycolor.addEventListener("input", () => {
+        user.color.primary = `${primarycolor.value}`;
+        localStorage.setItem('styling', JSON.stringify(user));
+    });
 
-secondarycolor.addEventListener("input", () => {
-    user.color.secondary = `${secondarycolor.value}`;
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+    secondarycolor.addEventListener("input", () => {
+        user.color.secondary = `${secondarycolor.value}`;
+        localStorage.setItem('styling', JSON.stringify(user));
+    });
 
-tertiarycolor.addEventListener("input", () => {
-    user.color.tertiary = `${tertiarycolor.value}`;
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+    tertiarycolor.addEventListener("input", () => {
+        user.color.tertiary = `${tertiarycolor.value}`;
+        localStorage.setItem('styling', JSON.stringify(user));
+    });
 
-quaternarycolor.addEventListener("input", () => {
-    user.color.quaternary = `${quaternarycolor.value}`;
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+    quaternarycolor.addEventListener("input", () => {
+        user.color.quaternary = `${quaternarycolor.value}`;
+        localStorage.setItem('styling', JSON.stringify(user));
+    });
+}
 
-// temporaries
-console.log(cc.getBoundingClientRect());
-console.log(user);
-
+setInterval(getTime, 0.4);
+loadData();
 loadStyle();

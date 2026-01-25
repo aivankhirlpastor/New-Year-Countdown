@@ -12,7 +12,7 @@ If you are looking for the New Year Countdown, why not to try it *here*?
 
 
 
-New Year Countdown follows the mechanics of sexagesimal-based system and counting towards the next year. Its automatic alignment allows the content to hinge an alignment of its structure rather than static alignment. Its structural appearances are inspired from a led-segment display, with the dot–instead of colon–is utilised to reduce clutters in a countdown system.
+New Year Countdown follows the mechanics of sexagesimal-based system and counting towards the next year. Its automatic alignment allows the content to hinge an alignment of its structure rather than static alignment. Its structural appearances are classified as a led-segment display, with the dot–instead of colon–is utilised to reduce clutters in a countdown system.
 
 
 

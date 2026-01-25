@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="toolbar">
+    <output-toolbar>
         <div>
             <div class="main">
                 <input aria-label="Main Color" id="main" value="#ffffff" type="color">
@@ -41,9 +40,9 @@
                 </button>
             </div>
         </div>
-    </div>
+    </output-toolbar>
 
-    <div id="menu">
+    <output-menu id="menu">
         <h2 title="Click here to close the panel menu.">GRAPHICS</h2>
         <div id="block-wall"></div>
         <div>
@@ -58,18 +57,7 @@
             <label for="glass-effect">Glass Effect</label>
             <input id="glass-effect" type="checkbox" value="Glass Effect">
         </div>
-    </div>
-
-    <div id="pop-up">
-        <section>
-            <h2>RESET STYLE TO DEFAULT?</h2>
-            <p>The standard style of the elements will be returned by this operation.</p>
-        </section>
-        <div>
-            <button type="button" id="on-operation">Yes</button>
-            <button type="button" id="close-cancel">No</button>
-        </div>
-    </div>
+    </output-menu>
 
     <div id="backdrop">
         <div id="container">
@@ -80,13 +68,12 @@
                     <div id="separator">   .  .</div>
                     <div class="unit-base" id="b-1">!!2!</div>
                     <div class="unit-base" id="b-2">10!</div>
-                    <div class="unit-base" id="b-3">48!</div>
+                    <div class="unit-base" id="b-3">48</div>
+                    <div class="unit-base" id="b-4">!</div>
                 </div>
             </div>
         </div>
     </div>
-
-    <span class="fullscreen-tip">Press ESC on your keyboard or double click/tap anywhere on your screen.</span>
 
     <footer>
         <div>
@@ -94,9 +81,8 @@
                 New-Year-Countdown
                 <a href="./demo.html">demo</a>
             </span>
-            <a href="https://github.com/aivankhirlpastor/New-Year-Countdown" target="_blank">GitHub Page</a>
+            <a href="https://github.com/aivankhirlpastor/New-Year-Countdown" target="_blank">GitHub Source</a>
         </div>
-
     </footer>
 
     <script src="script.js"></script>

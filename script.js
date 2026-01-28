@@ -217,7 +217,6 @@ class toastNotification extends HTMLElement {
     }
 
     connectedCallback() {
-        // this.buildToast();
         const catchctr = document.querySelector("toast-ctr")
         for (let ch = catchctr.childElementCount; ch > 4; ch--) {
             toasts.children[catchctr.childElementCount - ch].children[0].conceal();
@@ -247,6 +246,7 @@ class popUp extends HTMLElement {
         this.opt = document.createElement("option-deck");
         this.btns = document.createElement("div");
         this.btns.setAttribute("part", "options");
+        this.btnLabels = undefined;
 
         this.root = this.opt.attachShadow({ mode: "open" });
         this.root.appendChild(this.btns);
@@ -271,33 +271,23 @@ class popUp extends HTMLElement {
 
                 if (val === "message") {
                     const b1 = document.createElement("button");
-                    b1.id = "close-cancel";
-                    b1.textContent = "Close";
+                    b1.textContent = typeof this.btnLabels !== "object" ? this.btnLabels || "Close" : "Close";
                     this.btns.appendChild(b1);
 
                     b1.addEventListener("click", () => {
                         this.remove();
                     })
                 } else if (val === "close-ended") {
-                    const b2 = document.createElement("button");
-                    const b4 = document.createElement("button");
+                    for (let q = 0; q < 2; q++) {
+                        const btn = document.createElement("button");
 
-                    b2.id = "push-operation";
-                    b2.textContent = "Yes";
-                    this.btns.appendChild(b2);
-
-                    b2.addEventListener("click", () => {
-                        this.trigger();
-                        this.remove();
-                    });
-
-                    b4.id = "close-cancel";
-                    b4.textContent = "No";
-                    this.btns.appendChild(b4);
-
-                    b4.addEventListener("click", () => {
-                        this.remove();
-                    })
+                        btn.textContent = typeof this.btnLabels === "object" && this.btnLabels[q] ? this.btnLabels[q] : q ? "No" : "Yes";
+                        btn.addEventListener("click", () => {
+                            q === 0 ? this.trigger() : null;
+                            this.remove();
+                        })
+                        this.btns.appendChild(btn);
+                    }
                 } else {
                     // Immediately close pop-up message and declare an error
                     // if none of these values match to a current value.
@@ -318,7 +308,12 @@ class popUp extends HTMLElement {
             //         return;
             //     }
             // }
-        } catch (err) { 
+            [...this.btns.children].forEach((b) => {
+                b.addEventListener("click", () => {
+                    concealInterface(true);
+                })
+            })
+        } catch (err) {
             document.createElement("toast-notif").buildToast({
                 text: err,
             }, {
@@ -327,12 +322,15 @@ class popUp extends HTMLElement {
             }, {
                 status: "error"
             });
-            
+
             console.error(err);
         }
     }
 
-    kits(message = { head: "MESSAGE", par: "" }, trigger) {
+    kits(attr = { type: "message" }, message = { head: "MESSAGE", par: "" }, trigger) {
+        this.btnLabels = attr.btnLabels;
+        this.setAttribute('type', attr.type);
+
         const heading = document.createElement("h2");
         heading.textContent = message.head;
 
@@ -351,8 +349,10 @@ class popUp extends HTMLElement {
                 throw Error(`The trigger declaration must be a function. Found and declared "${trigger}" as a ${typeof trigger}.`);
             }
         } else {
-            this.trigger = this.remove();
-            throw Error(`The trigger declaration was not provided and undefined.`);
+            if (attr.type !== "message") {
+                this.trigger = this.remove();
+                throw Error(`The trigger declaration was not provided and undefined.`);
+            }
         }
 
     }
@@ -447,6 +447,25 @@ const retrieveStyle = () => {
 
     system.act.oldstyle = null;
     loadStyle();
+}
+
+function concealInterface(forcepull) {
+    if (!root.requestFullscreen && !root.webkitRequestFullscreen && !root.msRequestFullscreen) {
+        body.classList.add("conceal-method");
+        setTimeout(() => {
+            if (forcepull) {
+                body.removeAttribute("class");
+            }
+
+            body.classList.toggle("conceal");
+            body.addEventListener("transitionend", () => {
+                if (!body.classList.contains("conceal")) {
+                    body.removeAttribute("class");
+                }
+            });
+
+        }, 100);
+    }
 }
 
 function getPointer(event) {
@@ -788,7 +807,7 @@ function getTime() {
 
     renderCountdown(years, month, days, hours, minutes, seconds, milliseconds);
 
-    let time = new Intl.DateTimeFormat("en-US", {
+    let time = new Intl.DateTimeFormat(locale, {
         timeStyle: "long",
     }).format(t);
 
@@ -804,20 +823,26 @@ function getTime() {
 
 // listeners
 
-document.getElementById("text-glow").addEventListener("change", () => {
-    textGlow();
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+// checkboxes
+["text-glow", "box-glow", "glass-effect"].forEach((id) => {
+    document.getElementById(id).addEventListener("change", () => {
+        switch (id) {
+            case "text-glow":
+                textGlow();
+                break;
+            case "box-glow":
+                boxGlow();
+                break;
+            case "glass-effect":
+                glassEffect();
+                break;
+            default:
+                return;
+        }
 
-document.getElementById("box-glow").addEventListener("change", () => {
-    boxGlow();
-    localStorage.setItem('styling', JSON.stringify(user));
-});
-
-document.getElementById("glass-effect").addEventListener("change", () => {
-    glassEffect();
-    localStorage.setItem('styling', JSON.stringify(user));
-});
+        localStorage.setItem('styling', JSON.stringify(user));
+    })
+})
 
 document.getElementById("menu").addEventListener("click", e => {
     if (document.getElementById("block-wall").contains(e.target) || document.querySelector("output-menu#menu h2").contains(e.target)) {
@@ -860,12 +885,13 @@ resetBtn.addEventListener("click", () => {
     const reset = document.createElement("pop-up");
 
     reset.kits({
+        type: "close-ended"
+    }, {
         head: "RESET STYLE TO DEFAULT?",
         par: "You are about to reset all of the styles, including the graphic settings, to a default style.",
     }, resetStyle);
 
     body.appendChild(reset);
-    reset.setAttribute('type', 'close-ended');
 });
 
 fullscreen.addEventListener("click", () => {
@@ -875,8 +901,33 @@ fullscreen.addEventListener("click", () => {
         root.webkitRequestFullscreen();
     } else if (root.msRequestFullscreen) {
         root.msRequestFullscreen();
-    };
+    }
 })
+
+if (!root.requestFullscreen && !root.webkitRequestFullscreen && !root.msRequestFullscreen) {
+    document.querySelector(".fullscreen").remove();
+    document.createElement("toast-notif").buildToast({
+        text: "The fullscreen is not compatible or supported by the browser you are currently using.",
+    }, {
+        text: "Dismiss",
+        action: "dismiss"
+    }, {
+        status: "info"
+    }, 8);
+
+    body.addEventListener("click", (e) => {
+        let li = 0;
+        [...body.children].forEach(el => {
+            if (el.contains(e.target) && el.id !== "backdrop") {
+                li++;
+            }
+        })
+
+        if (!li) {
+            concealInterface();
+        }
+    })
+}
 
 root.addEventListener("dblclick", () => {
     if (system.screen.fullscreen) {
@@ -923,7 +974,7 @@ if (!rootdemo) {
 // update styling when on focus
 window.addEventListener("focus", () => {
     reloadData();
-})
+});
 
 setInterval(getTime, 0.4);
 loadData();
